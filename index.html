@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnoHub — Share Your Ideas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --border: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #06b6d4;
+            --accent-secondary: #3b82f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+
+        .ideas-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .idea-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .idea-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.1);
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .idea-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .idea-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .idea-desc {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .idea-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: var(--accent);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .reactions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .reaction-btn {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .reaction-btn:hover {
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .reaction-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .comments-section {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .comments-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .comment {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .comment-author {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .comment-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .comment-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 0.6rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .comment-input button {
+            padding: 0.6rem 1rem;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .comment-input button:hover {
+            background: var(--accent-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .idea-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-wrap">
+            <div class="logo">InnoHub</div>
+            <nav>
+                <a onclick="showSection('ideas')">Ideas</a>
+                <a onclick="showSection('trending')">Trending</a>
+                <a href="https://github.com/metpolis/innohub" target="_blank">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Share Your Big Ideas</h1>
+            <p>Post projects, get real-time feedback, build in public. All ideas welcome here.</p>
+        </section>
+
+        <section class="post-form">
+            <h2 style="margin-bottom: 1.5rem;">Share Your Idea</h2>
+            <form onsubmit="submitIdea(event)">
+                <div class="form-group">
+                    <label>Project Title</label>
+                    <input type="text" id="title" placeholder="What's your idea called?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description" placeholder="Tell us about your idea, what problem does it solve?" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tech Stack</label>
+                        <input type="text" id="stack" placeholder="React, Next.js, Supabase, Vercel">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" id="author" placeholder="Anonymous" value="You">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Post Idea</button>
+            </form>
+        </section>
+
+        <section id="ideas-section">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Latest Ideas</h2>
+            <div id="ideas-list" class="ideas-list"></div>
+        </section>
+    </div>
+
+    <script>
+        // Mock Supabase data
+        let ideas = [
+            {
+                id: 1,
+                title: "Real-time Code Collab Platform",
+                description: "Like Google Docs but for code. Multiple devs coding together in real-time with instant syncing and conflict resolution.",
+                author: "Alex",
+                stack: "Next.js, Supabase, WebSocket, Monaco Editor",
+                timestamp: "2h ago",
+                reactions: { thumbsup: 12, heart: 8, fire: 5 },
+                comments: [
+                    { author: "Sam", text: "This would be insane for remote pair programming!", time: "1h ago" },
+                    { author: "Jordan", text: "Already exists (Replit, VS Live Share) but would be cool", time: "45m ago" }
+                ]
+            },
+            {
+                id: 2,
+                title: "AI Code Reviewer Bot",
+                description: "GitHub bot that reviews PRs, suggests improvements, catches bugs before they go to production. Free tier for open source.",
+                author: "Casey",
+                stack: "Node.js, OpenAI, GitHub API, Vercel Functions",
+                timestamp: "4h ago",
+                reactions: { thumbsup: 24, heart: 15, fire: 18 },
+                comments: [
+                    { author: "Morgan", text: "GitHub Copilot does some of this already", time: "3h ago" },
+                ]
+            },
+            {
+                id: 3,
+                title: "Design System Builder",
+                description: "No-code tool to build and manage design systems. Export as React components, Figma plugin, and CSS.",
+                author: "Taylor",
+                stack: "React, TypeScript, Framer Motion, Supabase",
+                timestamp: "6h ago",
+                reactions: { thumbsup: 19, heart: 22, fire: 7 },
+                comments: [
+                    { author: "Riley", text: "Interested! When are you starting?", time: "5h ago" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Developer Job Board (Reverse)",
+                description: "Companies post problems, developers bid on solving them. Get paid per completed task. No middleman.",
+                author: "Isak",
+                stack: "Next.js, PostgreSQL, Supabase, Stripe",
+                timestamp: "8h ago",
+                reactions: { thumbsup: 31, heart: 25, fire: 42 },
+                comments: [
+                    { author: "Dev", text: "This could disrupt freelancing platforms entirely", time: "7h ago" },
+                    { author: "Founder", text: "Already building something similar!", time: "6h ago" }
+                ]
+            }
+        ];
+
+        function renderIdeas() {
+            const list = document.getElementById('ideas-list');
+            
+            if (ideas.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No ideas yet</h3>
+                        <p>Be the first to share your vision</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = ideas.map(idea => `
+                <div class="idea-card">
+                    <div class="idea-header">
+                        <div>
+                            <div class="idea-title">${idea.title}</div>
+                            <div class="idea-meta">
+                                <span>by ${idea.author}</span>
+                                <span>${idea.timestamp}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="idea-desc">${idea.description}</p>
+                    
+                    <div class="idea-stack">
+                        ${idea.stack.split(',').map(tech => `<span class="tag">${tech.trim()}</span>`).join('')}
+                    </div>
+
+                    <div class="reactions">
+                        <button class="reaction-btn" onclick="addReaction(${idea.id}, 'thumbsup')">👍 ${idea.reactions.thumbsup}</button>
+                        <button class="reaction-btn" onclick="addReaction(${idea.id}, 'heart')">❤️ ${idea.reactions.heart}</button>
+                        <button class="reaction-btn" onclick="addReaction(${idea.id}, 'fire')">🔥 ${idea.reactions.fire}</button>
+                    </div>
+
+                    <div class="comments-section">
+                        <div class="comments-title">Comments (${idea.comments.length})</div>
+                        ${idea.comments.map(comment => `
+                            <div class="comment">
+                                <div class="comment-author">${comment.author}</div>
+                                <div class="comment-text">${comment.text}</div>
+                                <div class="comment-time">${comment.time}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function submitIdea(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const stack = document.getElementById('stack').value;
+            const author = document.getElementById('author').value;
+
+            const newIdea = {
+                id: ideas.length + 1,
+                title,
+                description,
+                author: author || 'Anonymous',
+                stack: stack || 'Stack TBA',
+                timestamp: 'now',
+                reactions: { thumbsup: 0, heart: 0, fire: 0 },
+                comments: []
+            };
+
+            ideas.unshift(newIdea);
+            renderIdeas();
+
+            // Reset form
+            document.querySelector('.post-form form').reset();
+            alert('Idea posted! 🚀');
+        }
+
+        function addReaction(ideaId, reactionType) {
+            const idea = ideas.find(i => i.id === ideaId);
+            if (idea) {
+                idea.reactions[reactionType]++;
+                renderIdeas();
+            }
+        }
+
+        function showSection(section) {
+            alert(`Section: ${section} (Coming soon in real version with Supabase!)`);
+        }
+
+        // Initial render
+        renderIdeas();
+    </script>
+</body>
+</html>
